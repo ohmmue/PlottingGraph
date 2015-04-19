@@ -37,6 +37,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private boolean cond2;
 	final double UPTHRESS = 30.0;
 	final double LOWTHRESS = 6.0;
+	private int counter;
 	
 	
 	@Override
@@ -59,6 +60,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 		min = 100;
 		cond1=false;
 		cond2=false;
+		counter=0;
 		
 		
 		if (sensorData == null || sensorData.size() == 0) {
@@ -89,6 +91,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if (started) {
+			counter ++;
 			double x = event.values[0];
 			double y = event.values[1];
 			double z = event.values[2];
@@ -103,11 +106,13 @@ public class MainActivity extends Activity implements SensorEventListener,
 				cond2 = true;
 			if (cond1 && cond2)
 			{
+				
 				Toast.makeText (getBaseContext (), "i am dropped!",
 						Toast.LENGTH_LONG).show();
+				cond1= false;
+				cond2= false;
 			}
-			cond1= false;
-			cond2= false;
+			
 			
 			x=0;
 			y=0;
@@ -132,7 +137,14 @@ public class MainActivity extends Activity implements SensorEventListener,
 					.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 			sensorManager.registerListener(this, accel,
 					SensorManager.SENSOR_DELAY_FASTEST);
+			
+			long starttime = System.currentTimeMillis();
+			String strStarttime = Long.toString(starttime);
+			Toast.makeText (getBaseContext (), strStarttime,
+					Toast.LENGTH_LONG).show();
+			
 			break;
+			
 		case R.id.btnStop:
 			btnStart.setEnabled(true);
 			btnStop.setEnabled(false);
@@ -142,13 +154,19 @@ public class MainActivity extends Activity implements SensorEventListener,
 			layout.removeAllViews();
 			openChart(); // show data in chart
 			
-			String result = "Min = " + min + " Max = " + max;
-			Toast.makeText (getBaseContext (), result,
-					Toast.LENGTH_LONG).show();
 			max = 0;
 			min = 100;
-					
+			long stoptime = System.currentTimeMillis();	
+			String strStoptime = Long.toString(stoptime);
+			String result = "Min = " + min + " Max = " + max + "Counter = " + counter + "Stop = " + strStoptime;
+			Toast.makeText (getBaseContext (), result,
+					Toast.LENGTH_LONG).show();
+			counter = 0;
+			starttime = 0;
+			stoptime = 0;
 			break;
+			
+			
 		case R.id.btnUpload:
 
 			break;
