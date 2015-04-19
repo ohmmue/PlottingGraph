@@ -33,6 +33,11 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private View mChart;
 	private double min;
 	private double max;
+	private boolean cond1;
+	private boolean cond2;
+	final double UPTHRESS = 30.0;
+	final double LOWTHRESS = 6.0;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,9 @@ public class MainActivity extends Activity implements SensorEventListener,
 		btnStop.setEnabled(false);
 		max = 0;
 		min = 100;
+		cond1=false;
+		cond2=false;
+		
 		
 		if (sensorData == null || sensorData.size() == 0) {
 			btnUpload.setEnabled(false);
@@ -89,6 +97,17 @@ public class MainActivity extends Activity implements SensorEventListener,
 				min=z;
 			if (z>max)
 				max=z;
+			if(z > UPTHRESS) 
+				cond1 = true;
+			if(z < LOWTHRESS) 
+				cond2 = true;
+			if (cond1 && cond2)
+			{
+				Toast.makeText (getBaseContext (), "i am dropped!",
+						Toast.LENGTH_LONG).show();
+			}
+			cond1= false;
+			cond2= false;
 			
 			x=0;
 			y=0;
