@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements SensorEventListener,
 		OnClickListener {
@@ -30,7 +31,9 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private ArrayList<AccelData> sensorData;
 	private LinearLayout layout;
 	private View mChart;
-
+	private double min;
+	private double max;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,6 +50,9 @@ public class MainActivity extends Activity implements SensorEventListener,
 		btnUpload.setOnClickListener(this);
 		btnStart.setEnabled(true);
 		btnStop.setEnabled(false);
+		max = 0;
+		min = 100;
+		
 		if (sensorData == null || sensorData.size() == 0) {
 			btnUpload.setEnabled(false);
 		}
@@ -78,6 +84,14 @@ public class MainActivity extends Activity implements SensorEventListener,
 			double x = event.values[0];
 			double y = event.values[1];
 			double z = event.values[2];
+			z = Math.sqrt((x*x)+(y*y)+(z*z));
+			if (z<min)
+				min=z;
+			if (z>max)
+				max=z;
+			
+			x=0;
+			y=0;
 			long timestamp = System.currentTimeMillis();
 			AccelData data = new AccelData(timestamp, x, y, z);
 			sensorData.add(data);
@@ -107,9 +121,14 @@ public class MainActivity extends Activity implements SensorEventListener,
 			started = false;
 			sensorManager.unregisterListener(this);
 			layout.removeAllViews();
-			openChart();
-
-			// show data in chart
+			openChart(); // show data in chart
+			
+			String result = "Min = " + min + " Max = " + max;
+			Toast.makeText (getBaseContext (), result,
+					Toast.LENGTH_LONG).show();
+			max = 0;
+			min = 100;
+					
 			break;
 		case R.id.btnUpload:
 
