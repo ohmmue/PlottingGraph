@@ -35,9 +35,11 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private double max;
 	private boolean cond1;
 	private boolean cond2;
+	private boolean cond3;
 	final double UPTHRESS = 30.0;
 	final double LOWTHRESS = 6.0;
 	private int counter;
+	private int counter2;
 	
 	
 	@Override
@@ -60,7 +62,8 @@ public class MainActivity extends Activity implements SensorEventListener,
 		min = 100;
 		cond1=false;
 		cond2=false;
-		counter=0;
+		counter = 0;
+		counter2 = 0;
 		
 		
 		if (sensorData == null || sensorData.size() == 0) {
@@ -92,6 +95,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 	public void onSensorChanged(SensorEvent event) {
 		if (started) {
 			counter ++;
+			
 			double x = event.values[0];
 			double y = event.values[1];
 			double z = event.values[2];
@@ -104,13 +108,20 @@ public class MainActivity extends Activity implements SensorEventListener,
 				cond1 = true;
 			if(z < LOWTHRESS) 
 				cond2 = true;
-			if (cond1 && cond2)
+			
+			if (9.6 < z  && z < 10.00) {
+				  counter2 ++;
+				  if (counter2 >3000)
+					  cond3=true; }
+			
+			if (cond1 && cond2 && cond3)
 			{
-				
 				Toast.makeText (getBaseContext (), "i am dropped!",
 						Toast.LENGTH_LONG).show();
 				cond1= false;
 				cond2= false;
+				cond3= false;
+				counter2 = 0; 
 			}
 			
 			
