@@ -38,7 +38,6 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private boolean cond3;
 	final double UPTHRESS = 30.0;
 	final double LOWTHRESS = 6.0;
-	private int counter;
 	private int counter2;
 	
 	
@@ -62,7 +61,6 @@ public class MainActivity extends Activity implements SensorEventListener,
 		min = 100;
 		cond1=false;
 		cond2=false;
-		counter = 0;
 		counter2 = 0;
 		
 		
@@ -94,25 +92,27 @@ public class MainActivity extends Activity implements SensorEventListener,
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if (started) {
-			counter ++;
-			
 			double x = event.values[0];
 			double y = event.values[1];
 			double z = event.values[2];
 			z = Math.sqrt((x*x)+(y*y)+(z*z));
+			
 			if (z<min)
 				min=z;
 			if (z>max)
 				max=z;
+			
 			if(z > UPTHRESS) 
 				cond1 = true;
 			if(z < LOWTHRESS) 
 				cond2 = true;
-			
 			if (9.6 < z  && z < 10.00) {
 				  counter2 ++;
-				  if (counter2 >3000)
-					  cond3=true; }
+				  	if (counter2 >500)
+					  cond3=true; 
+					}else{
+						counter2 = 0;
+					}
 			
 			if (cond1 && cond2 && cond3)
 			{
@@ -164,15 +164,14 @@ public class MainActivity extends Activity implements SensorEventListener,
 			sensorManager.unregisterListener(this);
 			layout.removeAllViews();
 			openChart(); // show data in chart
-			
-			max = 0;
-			min = 100;
+				
 			long stoptime = System.currentTimeMillis();	
 			String strStoptime = Long.toString(stoptime);
-			String result = "Min = " + min + " Max = " + max + "Counter = " + counter + "Stop = " + strStoptime;
+			String result = "Min = " + min + " Max = " + max ;
 			Toast.makeText (getBaseContext (), result,
 					Toast.LENGTH_LONG).show();
-			counter = 0;
+			max = 0;
+			min = 100;
 			starttime = 0;
 			stoptime = 0;
 			break;
