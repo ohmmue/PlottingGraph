@@ -9,8 +9,12 @@ import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
+
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -36,7 +40,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private boolean cond1;
 	private boolean cond2;
 	private boolean cond3;
-	final double UPTHRESS = 30.0;
+	final double UPTHRESS = 20.0;
 	final double LOWTHRESS = 6.0;
 	private int counter2;
 	
@@ -110,14 +114,16 @@ public class MainActivity extends Activity implements SensorEventListener,
 				  counter2 ++;
 				  	if (counter2 >500)
 					  cond3=true; 
-					}else{
-						counter2 = 0;
-					}
+
+			}else{
+				counter2 = 0;
+			}
 			
-			if (cond1 && cond2 && cond3)
+			if (cond1 && cond2 && cond3)// && cond3
 			{
-				Toast.makeText (getBaseContext (), "i am dropped!",
-						Toast.LENGTH_LONG).show();
+//				Toast.makeText (getBaseContext (), "i am dropped!",
+//						Toast.LENGTH_LONG).show();
+				popupBox();
 				cond1= false;
 				cond2= false;
 				cond3= false;
@@ -132,6 +138,44 @@ public class MainActivity extends Activity implements SensorEventListener,
 			sensorData.add(data);
 		}
 
+	}
+	
+	
+	public void popupBox(){
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+				MainActivity.this);
+
+		// set title
+		alertDialogBuilder.setTitle("SUDDEN DROP !");
+
+		// set dialog message
+		alertDialogBuilder
+				.setMessage("Are you having a drop? a message will be sent if you dont click NO!")
+				.setCancelable(false)
+				.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int id) {
+								// if this button is clicked, close
+								// current activity
+								MainActivity.this.finish();
+							}
+						})
+				.setNegativeButton("No",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int id) {
+								// if this button is clicked, just close
+								// the dialog box and do nothing
+								dialog.cancel();
+							}
+						});
+
+		// create alert dialog
+		AlertDialog alertDialog = alertDialogBuilder.create();
+
+		// show it
+		alertDialog.show();
 	}
 
 	@Override
@@ -151,8 +195,8 @@ public class MainActivity extends Activity implements SensorEventListener,
 			
 			long starttime = System.currentTimeMillis();
 			String strStarttime = Long.toString(starttime);
-			Toast.makeText (getBaseContext (), strStarttime,
-					Toast.LENGTH_LONG).show();
+//			Toast.makeText (getBaseContext (), strStarttime,
+//					Toast.LENGTH_LONG).show();
 			
 			break;
 			
