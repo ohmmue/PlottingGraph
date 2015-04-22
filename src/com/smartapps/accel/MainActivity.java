@@ -11,6 +11,7 @@ import org.achartengine.renderer.XYSeriesRenderer;
 
 
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -119,7 +121,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 				counter2 = 0;
 			}
 			
-			if (cond1 && cond2 && cond3)// && cond3
+			if (cond1 && cond2)// && cond3
 			{
 //				Toast.makeText (getBaseContext (), "i am dropped!",
 //						Toast.LENGTH_LONG).show();
@@ -141,6 +143,11 @@ public class MainActivity extends Activity implements SensorEventListener,
 	}
 	
 	
+	
+	
+	
+	
+	
 	public void popupBox(){
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 				MainActivity.this);
@@ -158,7 +165,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 									int id) {
 								// if this button is clicked, close
 								// current activity
-								MainActivity.this.finish();
+//								MainActivity.this.finish();
 							}
 						})
 				.setNegativeButton("No",
@@ -172,10 +179,21 @@ public class MainActivity extends Activity implements SensorEventListener,
 						});
 
 		// create alert dialog
-		AlertDialog alertDialog = alertDialogBuilder.create();
+		final AlertDialog alertDialog = alertDialogBuilder.create();
 
 		// show it
 		alertDialog.show();
+		
+		new CountDownTimer(5000, 1000) {
+
+		     public void onTick(long millisUntilFinished) {
+		    	 alertDialog.show();
+		     }
+
+		     public void onFinish() {
+		    	alertDialog.cancel();
+		     }
+		  }.start();
 	}
 
 	@Override
