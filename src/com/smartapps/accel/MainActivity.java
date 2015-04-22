@@ -44,7 +44,8 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private boolean cond3;
 	final double UPTHRESS = 20.0;
 	final double LOWTHRESS = 6.0;
-	private int counter2;
+	private int counter;
+	private boolean isDrop = false;
 	
 	
 	@Override
@@ -67,7 +68,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 		min = 100;
 		cond1=false;
 		cond2=false;
-		counter2 = 0;
+		counter = 0;
 		
 		
 		if (sensorData == null || sensorData.size() == 0) {
@@ -113,13 +114,16 @@ public class MainActivity extends Activity implements SensorEventListener,
 			if(z < LOWTHRESS) 
 				cond2 = true;
 			if (9.6 < z  && z < 10.00) {
-				  counter2 ++;
-				  	if (counter2 >500)
+				  counter ++;
+				  	if (counter >500)
 					  cond3=true; 
 
 			}else{
-				counter2 = 0;
+				counter = 0;
+				cond3 = false;
 			}
+			
+			
 			
 			if (cond1 && cond2)// && cond3
 			{
@@ -129,7 +133,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 				cond1= false;
 				cond2= false;
 				cond3= false;
-				counter2 = 0; 
+				counter = 0; 
 			}
 			
 			
@@ -149,6 +153,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 	
 	
 	public void popupBox(){
+		isDrop = true;
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 				MainActivity.this);
 
@@ -159,21 +164,11 @@ public class MainActivity extends Activity implements SensorEventListener,
 		alertDialogBuilder
 				.setMessage("Are you having a drop? a message will be sent if you dont click NO!")
 				.setCancelable(false)
-				.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int id) {
-								// if this button is clicked, close
-								// current activity
-//								MainActivity.this.finish();
-							}
-						})
 				.setNegativeButton("No",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int id) {
-								// if this button is clicked, just close
-								// the dialog box and do nothing
+								isDrop = false;
 								dialog.cancel();
 							}
 						});
@@ -187,11 +182,17 @@ public class MainActivity extends Activity implements SensorEventListener,
 		new CountDownTimer(5000, 1000) {
 
 		     public void onTick(long millisUntilFinished) {
-		    	 alertDialog.show();
+//		    	 alertDialog.show();
+		    	 
 		     }
 
 		     public void onFinish() {
 		    	alertDialog.cancel();
+		    	if(isDrop){
+					Toast.makeText (getBaseContext (), "SEND MESSAGE",
+					Toast.LENGTH_LONG).show();
+					isDrop = false;
+		    	}
 		     }
 		  }.start();
 	}
