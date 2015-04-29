@@ -23,11 +23,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.telephony.SmsManager;
 
 public class MainActivity extends Activity implements SensorEventListener,
 		OnClickListener {
@@ -115,7 +117,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 				cond2 = true;
 			if (9.6 < z  && z < 10.00) {
 				  counter ++;
-				  	if (counter >500)
+				  	if (counter >300)
 					  cond3=true; 
 
 			}else{
@@ -125,10 +127,10 @@ public class MainActivity extends Activity implements SensorEventListener,
 			
 			
 			
-			if (cond1 && cond2)// && cond3
+			if (cond1 && cond2 && cond3)
 			{
-//				Toast.makeText (getBaseContext (), "i am dropped!",
-//						Toast.LENGTH_LONG).show();
+				Toast.makeText (getBaseContext (), "i am dropped!",
+						Toast.LENGTH_LONG).show();
 				popupBox();
 				cond1= false;
 				cond2= false;
@@ -146,11 +148,24 @@ public class MainActivity extends Activity implements SensorEventListener,
 
 	}
 	
-	
-	
-	
-	
-	
+	protected void sendSMSMessage() {
+	      Log.i("Send SMS", "");
+
+	      String phoneNo = "01132756857" ; //txtphoneNo.getText().toString();
+	      String message = " Motion Detected"; //txtMessage.getText().toString();
+
+	      try {
+	         SmsManager smsManager = SmsManager.getDefault();
+	         smsManager.sendTextMessage(phoneNo, null, message, null, null);
+	         Toast.makeText(getApplicationContext(), "SMS sent.",
+	         Toast.LENGTH_LONG).show();
+	      } catch (Exception e) {
+	         Toast.makeText(getApplicationContext(),
+	         "SMS failed, please try again.",
+	         Toast.LENGTH_LONG).show();
+	         e.printStackTrace();
+	      }
+	   }
 	
 	public void popupBox(){
 		isDrop = true;
@@ -189,8 +204,9 @@ public class MainActivity extends Activity implements SensorEventListener,
 		     public void onFinish() {
 		    	alertDialog.cancel();
 		    	if(isDrop){
-					Toast.makeText (getBaseContext (), "SEND MESSAGE",
-					Toast.LENGTH_LONG).show();
+		    		sendSMSMessage();
+		    		/*Toast.makeText (getBaseContext (), "SEND MESSAGE",
+					Toast.LENGTH_LONG).show();*/
 					isDrop = false;
 		    	}
 		     }
@@ -248,6 +264,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 		}
 
 	}
+	
 
 	private void openChart() {
 		if (sensorData != null || sensorData.size() > 0) {
