@@ -115,7 +115,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 				cond1 = true;
 			if(z < LOWTHRESS) 
 				cond2 = true;
-			if (9.6 < z  && z < 10.00) {
+			if (9.6 < z  && z < 11.00) {
 				  counter ++;
 				  	if (counter >300)
 					  cond3=true; 
@@ -127,7 +127,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 			
 			
 			
-			if (cond1 && cond2 && cond3)
+			if ( cond1 && cond2 && cond3) //
 			{
 				Toast.makeText (getBaseContext (), "i am dropped!",
 						Toast.LENGTH_LONG).show();
